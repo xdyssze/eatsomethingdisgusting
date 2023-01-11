@@ -1,0 +1,23 @@
+#top {
+    position: fixed;
+    background-color: white;
+
+    border: 5px solid black;
+    width: 100%;
+    height: 20%;
+    margin-bottom: auto;
+    
+}
+#title {
+    padding: 20px;
+    text-align: center;
+  
+    color: black;;
+
+}
+
+body {
+    background-image: url("../img/roe.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%, 100%;
+}
