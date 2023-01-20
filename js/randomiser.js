@@ -1,8 +1,9 @@
 //import jQuery from '../js/jquery-3.6.3.min.js';
 // variabler
+// att göra, 
 cookingJSON = {
     "methods": {
-        "ingredientsPrep": ["smält", "skala och hacka", "hacka", "skala", "tvätta", "diska", "dränk", "skjut", "skär", "ät", "drick", "mata", "dra i", "ha samlag", "peta på", "skaka"],
+        "ingredientsPrep": ["Smält", "Skala och hacka", "Hacka", "Skala", "Tvätta", "Diska", "Dränk", "Skjut", "Skär", "Ät", "Drick", "Mata", "Dra i", "Ha samlag med", "Peta på", "Skaka"],
         "ingredientsPour": ["blanda", "häll", "tvinga", "hota", "tryck", "misshandla", "lura", "blackmaila"],
         "inForm": ["blanda", "skaka", "slå", "diska", "skrik på", "ge betyg till"],
         "cooking": ["stek", "koka", "mikra", "grilla", "soltorka", "värp"],
@@ -15,11 +16,11 @@ cookingJSON = {
     },
     "measurements": {
         "loose": ["g", "mg", "hg", "kg", "ton"],
-        "liquids": ["badkar", "ml", "cl", "dl", "l", "kubikmeter", " är basen och höjden på en pyramid, vad är volymen? svaras i dl"],
+        "liquids": ["badkar", "ml", "cl", "dl", "l", "kubikmeter"],
         "solids": ["st", "^2st", "^3st", "^4st"],
         "others": ["gay"],
         "time": ["milisekunder", "sekunder", "minuter", "timmar", "dagar", "veckor", "månader", "år", "decenium", "millenium", "måncyklar"],
-        "container": ["diskmaskin", "tvättmaskin", "mellanstor bunke", "liten bunke", "stor bunke", "kastrull", "stekpanna", "mikrovågsugn", "handfat", "fat", "oljefat", "skål"]
+        "container": ["en diskmaskin", "en tvättmaskin", "en bunke", "en kastrull", "en stekpanna", "en mikrovågsugn", "ett handfat", "ett fat", "ett oljefat", "en skål"]
     },
     "ingredients": {
         "loose": ["mjöl", "havre", "kokos", "fiskfilé", "hår", "malet socker", "kakao", "choklad", "grus", "kokain", "amfetamin", "sand", "jord", "strösocker", "peppar", "salt", "curry"],
@@ -28,7 +29,9 @@ cookingJSON = {
         "others": ["gay"]
 
     }
+    
 };
+// är basen och höjden på en pyramid, vad är volymen? svaras i dl"
 // funktionen som kallas vid fönsterladdningn
 window.onload = (event) => {
     createRecept();
@@ -41,66 +44,279 @@ window.onload = (event) => {
 function createRecept() {
     var ingredientList = new Ingredients;
     var instructionList = new Instructions(ingredientList);
+    instructionList.writeInstructions();
 }
 
 
-// Två klasser för båda grejor, recept klass inheritar både ingredients och instructions.
-
-
-
+// Klasser
 
 
 class Ingredients {
     // randomizera mängden idgredienser, 
     am;
-    in = {};
+    ing = {};
     constructor() {
-        am = Math.floor(Math.random() * 10);
-        this.createIngredients;
+        this.am = Math.floor(Math.random() * 10);
+        this.createIngredients();
+        this.writeIngredientList();
     };
+    // skapar idgredienser och stoppar i array
     createIngredients() {
         for(var i = 0; i < this.am; i++) {
-            this.in[i] = new Ingredient;
+            var ind = randomize("ingredients");
+            if(!arrContains(this.ing, ind.item, true)) {
+                this.ing[i] = ind;
+            } else {
+                i--;
+            }
+            
+            //console.log(this.ing[i]);
         }
     }
+    // get ingredient name
     getIngredient(ins) {
-        return this.in[ins].inN;
+        return this.ing[ins].item;
     }
+    // get ingredient type
     getType(ins) {
-        return this.in[ins].iT;
+        return this.ing[ins].type;
+    }
+    // skriver ut ingredienser i listan på websidan
+    writeIngredientList() {
+        console.log(this.ing);
+        for(var i = 0; i < this.am; i++) {
+            var ingds = document.getElementById("indgs");
+            var ing = document.createElement("li");
+            ing.classList.add("ingredient");
+            var iins = this.ing[i];
+            //(console.log(iins);
+            var matt = randomize("measurements", iins.type);
+            var str = (Math.floor(Math.random() * 100) + " " + matt.item + " " +  iins.item);
+            ing.textContent = str;
+            ingds.appendChild(ing);
+        }    
     }
 
     
     
 };
-// ingredient
 
-class Ingredient extends Randomize {
-    inN;
-    iT;
-    constructor() {
-        this.nn = 
-        
-    };
-    setType() {
-    }
-    
-};
+
+//hela instructions klassen hanterar att skapa och rita ut instruktioner på skärmen
 class Instructions {
-
+    // en array vilka idgredienser som är använda, en som är vilka är preppade, en för objekt vi har tillsatt, tex bunkar. While loop för så länge inte alla ingredienser har användts.
+    // 
+    running = true;
+    ammout = 0;
+    left = {};
+    obj = "";
+    instru = {};
+    cooked = false;
+    inForm = {};
+    prepped = {};
+    times = 0;
+    lastUsed = 0;
     constructor(iL) {
+        this.ammout = iL.am;
+        this.left = iL.ing;
+        
+        
+        
+        // när man tillsätter saker i bunken så försvinner sakerna från ingredienserna.
+        while(this.running) {
+            var str;
+            switch(Math.floor(Math.random() * 4 )) {
+                case 0: {
+                    // preppa ingredienser
+                    if(defineLength(this.left) != 0 && this.lastUsed != 0) {
+                        console.log(defineLength(this.left));
+                        var it = this.left[Math.floor(Math.random()*(defineLength(this.left)))];
+                        if(!arrContains(this.prepped, it.item)) {
+                            console.log(" : " + it);
+                            str = (randomize("methods", "ingredientsPrep").item + " " + it.item);
+                            this.prepped[defineLength(this.prepped)] = it.item;
+                        }
+                    }
+                    this.lastUsed = 0;
+                    break;
+                }
+                case 1: {
+                    //Hälla ingredienser ner i form
+                    if(defineLength(this.left) != 0 && this.lastUsed != 1) {
+                        var ss = Math.floor(Math.random() * (defineLength(this.left)));
+                        var it = this.left[ss];
+                        delete this.left[ss]
+                        this.left = recreateArray(this.left);
+                        var form;
+                        this.inForm[defineLength(this.inForm)] = it;
+                        if(this.obj != "") {
+                            form = this.obj;
+                        } else {
+                            form = randomize("measurements", "container").item;
+                            this.obj = form;
+                        
+                        }
+                        str = (randomize("methods", "ingredientsPour").item + " ner " + it.item + " i " + form);
+                    }
+                    this.lastUsed = 1;
+                    break;
+                }
+                case 2: {
+                    // hälla innehållet av form ner i annan form
+                    if(this.obj != "" && this.lastUsed != 2) {
+                        var it = this.obj;
+                        var form = randomize("measurements", "container").item;
+                        var way = randomize("methods", "ingredientsPour").item;
+                        this.obj = form;
+                        str = ( way + " innehållet av " + it.split(" ")[1] + "en ner i " + form);
+                    }
+                    this.lastUsed = 2;
+                    break;
+                    
+                }
+                case 3: {
+                    // Göra något i formen
+                    if(this.obj != "" && this.lastUsed != 3) {
+                        var dos = randomize("methods", "inForm").item;
+                        str = (dos + " ingredienserna i " + this.obj.split(" ")[1] + "en");
+                    }
+                    this.lastUsed = 3;
+                    break;
+                }
+                case 4: {
+                    // LAga det som är i formen
+                    if(defineLength(this.left) == 0 && this.lastUsed != 4) {
+                        if(Math.floor(Math.random() * 8) > 5) {
+                            str = randomize("methods", "specialCooking").item;
+                            this.cooked = true;
+                        } else {
+                            str = (randomize("methods", "cooking").item + " " + obj.split(" ")[1] + "en i " + Math.floor(Math.random() * 200) + " " + randomize("measurements", "time"));
+                            this.cooked = true;
+                        }
+                    }
+                    this.lastUsed = 4;
+                    break;
+                }
+                default: {
+                    this.lastUsed = 4;
+                    break;
+                }
+            }
+            if(str != undefined) {
+            this.instru[this.times] = (str);
+            str = undefined;
+            this.times++;
+            }
+            // avslut
+            if(this.cooked && defineLength(this.left) == 0) {
+                this.instru.append(this.times, "Servera den äckliga rätten");
+                this.running = false;
+  
+            } else if(this.times > 20) {
+                this.running = false;
+            }
+            
+
+        }
+        
 
     }
+    writeInstructions() {
+        
+        for(var i = 0; i < this.times; i++) {
+            var ingds = document.getElementById("insts");
+            var ing = document.createElement("li");
+            ing.classList.add("instruction");
+            var iins = this.instru[i];
+            console.log(iins + " s");
+            
+            ing.textContent = iins;
+            ingds.appendChild(ing);
+        }  
+    }
+
+    
     
 }
+// en instruktion är baserad på instruktionen före, vad det är för ingredienser, vad man kan göra med idgredienserna samt grammatik, så att den är gramatiskt korrekt
 
+
+
+// funktioner
+// väljer olika grejor från en array
 function randomize(primary, secondary) {
-    cookingJSON[primary].
+    var type;
+    //console.log(primary + secondary)
+    if(primary == "ingredients") {
+        // retarded och kan ordnas bättre men funkar för nu
+        switch(Math.floor(Math.random() * 3)) {
+            case 0: {
+                secondary = "loose";
+                break;
+            }
+            case 1: {
+                secondary = "liquids";               
+                break;
+            }
+            case 2: {
+                secondary = "solids";
+                break;
+            }
+            case 3: {
+                secondary = "others";
+                break;
+            }
+        }
+        type = secondary;
 
-}
+    } else if(secondary == "cooking") {
+        if(Math.floor(Math.random()) == 1) {
+            secondary = "specialCooking";
+        } 
+    }
 
-
-function writeListItems() {
+    var sex = cookingJSON[primary][secondary];
     
-
+    var num = Math.floor(Math.random() * sex.length);
+    var ret = {"item": sex[num], "type": type};
+    return(ret);
+}
+function defineLength(sex) {
+    var count = 0;
+    for(var s in sex) {
+        if(s != undefined) {
+            count++;
+        }
+    }
+    return(count);
+}
+function recreateArray(arr) {
+    var count = 0;
+    var newarr = {};
+    for(var i = 0; i <= defineLength(arr); i++) {
+        if(arr[i] != undefined) {
+        newarr[count] = arr[i];
+        count++;
+        }
+    }
+    return(newarr);
+}
+function arrContains(arr, str, sex) {
+    var c = false;
+    if(!sex) {
+        for(var s in arr) {
+            if(s == str) {
+                c = true;
+                return(c);
+            }
+        }
+    } else {
+        for(var i = 0; i < defineLength(arr); i++) {
+            if(arr.item == str) {
+                c = true;
+                return(c)
+            }
+        }
+    }
+    return(c);
 }
