@@ -132,13 +132,13 @@ class Instructions {
             var str;
             var srex = Math.floor(Math.random() * 5 );
             this.times2++;
-            
+            console.log("Se: " + srex);
             switch(srex) {
                 case 0: {
                     // preppa ingredienser
                     
                     if(defineLength(this.left) != 0 && this.lastUsed != 0) {
-                        
+                        console.log(defineLength(this.left));
                         var it = this.left[Math.floor(Math.random()*(defineLength(this.left)))];
                         if(!arrContains(this.prepped, it.item)) {
                             //console.log(" : " + it);
@@ -221,7 +221,7 @@ class Instructions {
             // avslut
             if(this.cooked && defineLength(this.left) == 0) {
                 this.instru[this.times] = ("Servera den äckliga rätten");
-                
+                console.log(this.instru[this.times]);
                 this.times++;
                 this.running = false;
   
@@ -241,7 +241,7 @@ class Instructions {
             var ing = document.createElement("li");
             ing.classList.add("instruction");
             var iins = this.instru[i];
-            
+            console.log(iins + " s");
             
             ing.textContent = iins;
             ingds.appendChild(ing);
@@ -290,10 +290,7 @@ function randomize(primary, secondary) {
 
     var sex = cookingJSON[primary][secondary];
     
-    var num = Math.floor(Math.random() * defineLength(sex));
-    if(num == defineLength(sex)) {
-        num--;
-    }
+    var num = Math.floor(Math.random() * sex.length);
     var ret = {"item": sex[num], "type": type};
     return(ret);
 }
