@@ -3,15 +3,16 @@
 // att göra, 
 cookingJSON = {
     "methods": {
-        "ingredientsPrep": ["Smält", "Skala och hacka", "Hacka", "Skala", "Tvätta", "Diska", "Dränk", "Skjut", "Skär", "Ät", "Drick", "Mata", "Dra i", "Ha samlag med", "Peta på", "Skaka"],
-        "ingredientsPour": ["blanda", "häll", "tvinga", "hota", "tryck", "misshandla", "lura", "blackmaila"],
-        "inForm": ["blanda", "skaka", "slå", "diska", "skrik på", "ge betyg till"],
+        "ingredientsPrep": ["Smält", "Skala och hacka", "Hacka", "Skala", "Tvätta", "Diska", "Dränk", "Skjut", "Skär", "Ät", "Drick", "Mata", "Dra i", "Ha samlag med", "Peta på", "Skaka", "sparka"],
+        "ingredientsPour": ["blanda", "häll", "tvinga", "hota", "tryck", "misshandla", "lura", "blackmaila", "vispa"],
+        "inForm": ["blanda", "skaka", "slå", "diska", "skrik på", "ge betyg till", "dunka", "runka", "klunka"],
         "cooking": ["stek", "koka", "mikra", "grilla", "soltorka", "värp"],
     
         "specialCooking": {
             "0": "Stoppa in i diskmaskinen och diska i 2-3 timmar på högsta värmen.",
             "1": "Stoppa in i tvättmaskinen och låt tvättas under normalprogram",
-            "2": "Skrik på och bedöm ingredienserna i circa 2-3 minuter tills dem börjar gråta"
+            "2": "Skrik på och bedöm ingredienserna i circa 2-3 minuter tills dem börjar gråta",
+            "3": "Låt ingredienserna marinera i sitt egna svett i torkskåp under 3-4 månader"
         }  
     },
     "measurements": {
@@ -20,12 +21,12 @@ cookingJSON = {
         "solids": ["st", "^2st", "^3st", "^4st"],
         "others": ["gay"],
         "time": ["milisekunder", "sekunder", "minuter", "timmar", "dagar", "veckor", "månader", "år", "decenium", "millenium", "måncyklar"],
-        "container": ["en diskmaskin", "en tvättmaskin", "en bunke", "en kastrull", "en stekpanna", "en mikrovågsugn", "ett handfat", "ett fat", "ett oljefat", "en skål"]
+        "container": ["en diskmaskin", "en tvättmaskin", "en bunke", "en kastrull", "en stekpanna", "en mikrovågsugn", "ett handfat", "ett fat", "ett oljefat", "en skål", "fågelholk"]
     },
     "ingredients": {
-        "loose": ["mjöl", "havre", "kokos", "fiskfilé", "hår", "malet socker", "kakao", "choklad", "grus", "kokain", "amfetamin", "sand", "jord", "strösocker", "peppar", "salt", "curry"],
-        "liquids": ["slajm", "urin", "diskvatten", "cum", "vatten", "lättmjölk", "mellanmjölk", "hårdmjölk", "grädde", "diskmedel", "bubbelvatten", "ica egna cola", "beundran", "sirap", "havsvatten", "grundvatten", "blod", "brännvin"],
-        "solids": ["barn", "alvedon novum", "ägg", "medelålders pappor", "bussar", "bilar", "fabriker", "manliga könsorgan", "kvinliga könsorgan", "mikrovågsugn", "buljong", "kartong", "bensinmack"],
+        "loose": ["mjöl", "havre", "kokos", "fiskfilé", "hår", "malet socker", "kakao", "choklad", "grus", "kokain", "amfetamin", "sand", "jord", "strösocker", "peppar", "salt", "curry", "kalksten"],
+        "liquids": ["slajm", "urin", "diskvatten", "cum", "vatten", "lättmjölk", "mellanmjölk", "hårdmjölk", "grädde", "diskmedel", "bubbelvatten", "ica egna cola", "beundran", "sirap", "havsvatten", "grundvatten", "blod", "brännvin", "cement"],
+        "solids": ["barn", "alvedon novum", "ägg", "medelålders pappor", "bussar", "bilar", "fabriker", "manliga könsorgan", "kvinliga könsorgan", "mikrovågsugn", "buljong", "kartong", "bensinmack", "skruv", "fågel", "sengångare"],
         "others": ["gay"]
 
     }
@@ -282,10 +283,6 @@ function randomize(primary, secondary) {
         }
         type = secondary;
 
-    } else if(secondary == "cooking") {
-        if(Math.floor(Math.random()) == 1) {
-            secondary = "specialCooking";
-        } 
     }
 
     var sex = cookingJSON[primary][secondary];
