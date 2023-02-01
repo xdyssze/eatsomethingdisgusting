@@ -21,7 +21,7 @@ cookingJSON = {
         "solids": ["st", "^2st", "^3st", "^4st"],
         "others": ["gay"],
         "time": ["milisekunder", "sekunder", "minuter", "timmar", "dagar", "veckor", "månader", "år", "decenium", "millenium", "måncyklar"],
-        "container": ["en diskmaskin", "en tvättmaskin", "en bunke", "en kastrull", "en stekpanna", "en mikrovågsugn", "ett handfat", "ett fat", "ett oljefat", "en skål", "fågelholk"]
+        "container": ["en diskmaskin", "en tvättmaskin", "en bunke", "en kastrull", "en stekpanna", "en mikrovågsugn", "ett handfat", "ett fat", "ett oljefat", "en skål", "en fågelholk"]
     },
     "ingredients": {
         "loose": ["mjöl", "havre", "kokos", "fiskfilé", "hår", "malet socker", "kakao", "choklad", "grus", "kokain", "amfetamin", "sand", "jord", "strösocker", "peppar", "salt", "curry", "kalksten"],
@@ -125,9 +125,6 @@ class Instructions {
     constructor(iL) {
         this.ammout = iL.am;
         this.left = iL.ing;
-        
-        
-        
         // när man tillsätter saker i bunken så försvinner sakerna från ingredienserna.
         while(this.running) {
             var str;
@@ -141,8 +138,8 @@ class Instructions {
                     if(defineLength(this.left) != 0 && this.lastUsed != 0) {
                         
                         var it = this.left[Math.floor(Math.random()*(defineLength(this.left)))];
-                        if(!arrContains(this.prepped, it.item)) {
-                            //console.log(" : " + it);
+                        if(!arrContains(this.prepped, it.item, false)) {
+                            
                             str = (randomize("methods", "ingredientsPrep").item + " " + it.item);
                             this.prepped[defineLength(this.prepped)] = it.item;
                         }
@@ -167,8 +164,9 @@ class Instructions {
                         
                         }
                         str = (randomize("methods", "ingredientsPour").item + " ner " + it.item + " i " + form);
+                        this.lastUsed = 1;
                     }
-                    this.lastUsed = 1;
+                   
                     break;
                 }
                 case 2: {
@@ -179,8 +177,9 @@ class Instructions {
                         var way = randomize("methods", "ingredientsPour").item;
                         this.obj = form;
                         str = ( way + " innehållet av " + it.split(" ")[1] + "en ner i " + form);
+                        this.lastUsed = 2;
                     }
-                    this.lastUsed = 2;
+                    
                     break;
                     
                 }
@@ -189,8 +188,9 @@ class Instructions {
                     if(this.obj != "" && this.lastUsed != 3) {
                         var dos = randomize("methods", "inForm").item;
                         str = (dos + " ingredienserna i " + this.obj.split(" ")[1] + "en");
+                        this.lastUsed = 3;
                     }
-                    this.lastUsed = 3;
+                    
                     break;
                 }
                 case 4: {
@@ -205,12 +205,13 @@ class Instructions {
                             str = (randomize("methods", "cooking").item + " " + this.obj.split(" ")[1] + "en i " + Math.floor(Math.random() * 200) + " " + randomize("measurements", "time").item);
                             this.cooked = true;
                         }
+                        this.lastUsed = 4;
                     }
-                    this.lastUsed = 4;
+                    
                     break;
                 }
                 default: {
-                    this.lastUsed = 5;
+                    this.lastUsed = 3;
                     break;
                 }
             }
@@ -316,16 +317,20 @@ function recreateArray(arr) {
 }
 function arrContains(arr, str, sex) {
     var c = false;
+    // Om sex är falskt, aka är en string, körs en funktion
     if(!sex) {
+        
         for(var s in arr) {
-            if(s == str) {
+            if(arr[s] == str) {
                 c = true;
                 return(c);
             }
         }
     } else {
+        // ANnars om det är en ingrediens så körs denna.
         for(var i = 0; i < defineLength(arr); i++) {
-            if(arr.item == str) {
+            if(arr[i] == str) {
+                console.log("arr: " + arr + " Item: " + arr[s] + " match: " + str);
                 c = true;
                 return(c)
             }
